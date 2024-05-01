@@ -3,7 +3,8 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ArvBin arvore = new ArvBin(100); // Supõe que a árvore pode ter até 100 elementos
+        ArvBin arvore = new ArvBin(1000); // Supõe que a árvore pode ter até 1000 elementos
+        // ArvBal arvoreBalanceada = new ArvBal(1000);
 
         while (scanner.hasNextLine()) {
             String input = scanner.nextLine();
@@ -13,7 +14,7 @@ public class Main {
 
             String[] command = input.split(" ");
             if (command.length != 2) {
-                continue; // Ignora linhas mal formatadas
+                continue; // ignora linhas mal formatadas
             }
 
             String operation = command[0];
@@ -22,13 +23,11 @@ public class Main {
             switch (operation) {
                 case "i":
                     arvore.insert(value);
-                    System.out.println("Inserido: " + value);
                     break;
                 case "d":
-                    if (arvore.remove(value)) {
-                        System.out.println("Removido: " + value);
-                    } else {
+                    if (arvore.remove(value) == false) {
                         System.out.println("Não encontrado para remover: " + value);
+
                     }
                     break;
                 default:

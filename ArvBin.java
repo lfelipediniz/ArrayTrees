@@ -2,9 +2,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ArvBin {
-    private String[] heap;
-    private int size;
-    private int capacity;
+    protected String[] heap;
+    protected int size;
+    protected int capacity;
 
     public ArvBin(int len) {
         heap = new String[len];
