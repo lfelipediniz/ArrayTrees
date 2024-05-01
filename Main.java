@@ -36,8 +36,6 @@ public class Main {
                     break;
             }
         }
-
-        System.out.println("Estado final da árvore:");
         System.out.println(arvore.toString());
         scanner.close();
     }
