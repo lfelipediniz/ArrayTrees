@@ -39,14 +39,14 @@ public class ArvBin {
 
     public boolean remove(String v) {
         int index = findIndex(v);
-        if (index == -1) return false; // Elemento não encontrado
+        if (index == -1) return false; // elemento não encontrado
 
         List<String> elements = new ArrayList<>();
-        collectSubtreeElements(index, elements); // Coleta elementos da subárvore
-        clearSubtree(index); // Limpa a subárvore
+        collectSubtreeElements(index, elements); // coleta elementos da subárvore
+        clearSubtree(index); // limpa a subárvore
 
         for (String element : elements) {
-            if (!element.equals(v)) { // Reinsere todos os elementos exceto o removido
+            if (!element.equals(v)) { // reinsere todos os elementos exceto o removido
                 insert(element);
             }
         }
@@ -64,21 +64,21 @@ public class ArvBin {
                 return i;
             }
         }
-        return -1; // Não encontrado
+        return -1; // não encontrado
     }
 
     private void collectSubtreeElements(int index, List<String> elements) {
         if (index >= size || heap[index] == null) return;
         elements.add(heap[index]);
-        collectSubtreeElements(2 * index + 1, elements); // Esquerda
-        collectSubtreeElements(2 * index + 2, elements); // Direita
+        collectSubtreeElements(2 * index + 1, elements); // esquerda
+        collectSubtreeElements(2 * index + 2, elements); // direita
     }
 
     private void clearSubtree(int index) {
         if (index >= size || heap[index] == null) return;
         heap[index] = null;
-        clearSubtree(2 * index + 1); // Esquerda
-        clearSubtree(2 * index + 2); // Direita
+        clearSubtree(2 * index + 1); // esquerda
+        clearSubtree(2 * index + 2); // direita
     }
 
     public int len() {
