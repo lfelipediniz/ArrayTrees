@@ -1,31 +1,22 @@
-# compilador Java
-JAVAC = javac
+JCC = javac
+JVM = java
+MAIN = Main
 
-# interpretador Java
-JAVA = java
+# Definir arquivos fonte
+SOURCES = ArvAVL.java ArvBal.java ArvBin.java Main.java
 
-# lista de arquivos fonte
-SOURCES = ArvAVL.java ArvBal.java arvBin.java Main.java
-
-# arquivos de classe que serão criados (mesmos nomes que os .java, mas com .class)
+# Definir arquivos .class correspondentes
 CLASSES = $(SOURCES:.java=.class)
 
-# target padrão que será executado quando não for especificado um na linha de comando
-default: run
+all: $(CLASSES)
 
-# compilar os arquivos .java em .class
-$(CLASSES): $(SOURCES)
-	$(JAVAC) $(SOURCES)
+%.class: %.java
+	$(JCC) $<
 
-# executar a classe principal
-run: $(CLASSES)
-	$(JAVA) Main
+run: $(MAIN).class
+	$(JVM) $(MAIN)
 
-# limpar os arquivos .class, mantendo o diretório limpo
 clean:
-	rm -f *.class
+	$(RM) *.class
 
-# target para ajudar na depuração do Makefile (mostra as variáveis)
-debug:
-	@echo "SOURCES: $(SOURCES)"
-	@echo "CLASSES: $(CLASSES)"
+.PHONY: all run clean
