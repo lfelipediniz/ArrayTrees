@@ -1,23 +1,24 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class ArvBin {
     private String[] heap;
     private int size;
     private int capacity;
 
-    // Construtor
     public ArvBin(int len) {
         heap = new String[len];
         size = 0;
         capacity = len;
     }
 
-    // Insere uma string na árvore mantendo a ordem
     public void insert(String value) {
         int i = 0;
         while(i < size && heap[i] != null) {
             if(value.compareTo(heap[i]) < 0) {
-                i = 2 * i + 1; // vai pro filho da esquerda
+                i = 2 * i + 1;
             } else if(value.compareTo(heap[i]) > 0){
-                i = 2 * i + 2; // vai pro filho da direita
+                i = 2 * i + 2;
             } else {
                 return; // elemento já existe
             }
@@ -25,24 +26,61 @@ public class ArvBin {
 
         if(i < capacity) {
             heap[i] = value;
-            // size = i + 1; // atualiza o tamanho com base nos saltos que podemos dar quando escrevemosno vetor
+            size = Math.max(size, i + 1);
         } else {
             System.out.println("Árvore cheia");
         }
     }
 
-    // Verifica se o elemento está presente
     public boolean find(String v) {
-        return true;
+        int i = findIndex(v);
+        return i != -1;
     }
 
-    // Remove um elemento da árvore
     public boolean remove(String v) {
-        return true;
+        int index = findIndex(v);
+        if (index == -1) return false; // Elemento não encontrado
 
+        List<String> elements = new ArrayList<>();
+        collectSubtreeElements(index, elements); // Coleta elementos da subárvore
+        clearSubtree(index); // Limpa a subárvore
+
+        for (String element : elements) {
+            if (!element.equals(v)) { // Reinsere todos os elementos exceto o removido
+                insert(element);
+            }
+        }
+        return true;
     }
 
-    // retorna o número de elementos presentes na árvore
+    private int findIndex(String v) {
+        int i = 0;
+        while(i < size && heap[i] != null) {
+            if(v.compareTo(heap[i]) < 0) {
+                i = 2 * i + 1;
+            } else if(v.compareTo(heap[i]) > 0){
+                i = 2 * i + 2;
+            } else {
+                return i;
+            }
+        }
+        return -1; // Não encontrado
+    }
+
+    private void collectSubtreeElements(int index, List<String> elements) {
+        if (index >= size || heap[index] == null) return;
+        elements.add(heap[index]);
+        collectSubtreeElements(2 * index + 1, elements); // Esquerda
+        collectSubtreeElements(2 * index + 2, elements); // Direita
+    }
+
+    private void clearSubtree(int index) {
+        if (index >= size || heap[index] == null) return;
+        heap[index] = null;
+        clearSubtree(2 * index + 1); // Esquerda
+        clearSubtree(2 * index + 2); // Direita
+    }
+
     public int len() {
         return size;
     }
