@@ -43,7 +43,7 @@ tamanho, toString
 | void                | insert(String value) | Insere uma string na árvore                                     |
 | int                 | len()                | retorna o número de elementos presentes na árvore              |
 | boolean             | remove(String v)     | Remove um elemento da árvore                                    |
-| String              | toString()           | retorna uma string no formato de um grafo da ferramenta graphviz |
+| String              | toString()           | retorna uma string da árvore |
 
 ### Resumo dos Contrutores
 

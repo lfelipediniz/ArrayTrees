@@ -1,102 +1,48 @@
 public class ArvBin {
-    protected String[] tree;
+    private String[] heap;
     private int size;
 
+    // construtor
     public ArvBin(int len) {
-        tree = new String[len];
+        heap = new String[len];
         size = 0;
     }
 
+    // insere uma string na árvore
     public void insert(String value) {
-        if (size == tree.length) {
-            throw new RuntimeException("Tree is full");
+        if (size == heap.length) {
+            System.out.println("Heap está cheio");
+            return;
         }
-        tree[size] = value;
+        heap[size] = value;
         size++;
-        heapifyUp(size - 1);
     }
 
-    private void heapifyUp(int index) {
-        while (index > 0 && tree[parent(index)].compareTo(tree[index]) > 0) {
-            swap(index, parent(index));
-            index = parent(index);
-        }
-    }
-
-    public boolean remove(String value) {
+    // verifica se o elemento está presente
+    public boolean find(String v) {
         for (int i = 0; i < size; i++) {
-            if (tree[i].equals(value)) {
-                tree[i] = tree[size - 1];
-                tree[size - 1] = null;
+            if (heap[i] != null && heap[i].equals(v)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // remove um elemento da árvore
+    public boolean remove(String v) {
+        for (int i = 0; i < size; i++) {
+            if (heap[i] != null && heap[i].equals(v)) {
+                heap[i] = heap[size - 1]; // Move o último elemento para o local do elemento removido
+                heap[size - 1] = null; // Remove a referência do último elemento
                 size--;
-                heapifyDown(i);
                 return true;
             }
         }
         return false;
     }
 
-    private void heapifyDown(int index) {
-        int smallest = index;
-        int leftIndex = leftChild(index);
-        int rightIndex = rightChild(index);
-
-        if (leftIndex < size && tree[leftIndex].compareTo(tree[smallest]) < 0) {
-            smallest = leftIndex;
-        }
-
-        if (rightIndex < size && tree[rightIndex].compareTo(tree[smallest]) < 0) {
-            smallest = rightIndex;
-        }
-
-        if (smallest != index) {
-            swap(index, smallest);
-            heapifyDown(smallest);
-        }
-    }
-
-    public boolean find(String value) {
-        for (String s : tree) {
-            if (s != null && s.equals(value)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
+    // retorna o número de elementos presentes na árvore
     public int len() {
         return size;
-    }
-
-    public String toString() {
-        StringBuilder sb = new StringBuilder("digraph {\n");
-        for (int i = 0; i < size; i++) {
-            if (leftChild(i) < size) {
-                sb.append("\"").append(tree[i]).append("\" -> \"").append(tree[leftChild(i)]).append("\"\n");
-            }
-            if (rightChild(i) < size) {
-                sb.append("\"").append(tree[i]).append("\" -> \"").append(tree[rightChild(i)]).append("\"\n");
-            }
-        }
-        sb.append("}");
-        return sb.toString();
-    }
-
-    protected int leftChild(int i) {
-        return 2 * i + 1;
-    }
-
-    protected int rightChild(int i) {
-        return 2 * i + 2;
-    }
-
-    protected int parent(int i) {
-        return (i - 1) / 2;
-    }
-
-    protected void swap(int i, int j) {
-        String temp = tree[i];
-        tree[i] = tree[j];
-        tree[j] = temp;
     }
 }
