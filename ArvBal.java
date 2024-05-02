@@ -5,14 +5,32 @@ public class ArvBal extends ArvBin {
 
     @Override
     public void insert(String value) {
-        super.insert(value);
-        // Implementar rotinas de balanceamento específicas aqui
+        int p = 0;
+
+        abb_insert_string(value, p);
+
     }
 
-    @Override
-    public boolean remove(String value) {
-        boolean result = super.remove(value);
-        // Implementar rotinas de balanceamento específicas aqui
-        return result;
+    private void abb_insert_string(String value, int p) {
+        if (p < capacity) {
+            if (heap[p] == null) {
+                heap[p] = value;
+                size = Math.max(size, p + 1);
+            } else {
+                if (value.compareTo(heap[p]) < 0) {
+                    abb_insert_string(value, 2 * p + 1);
+                } else if (value.compareTo(heap[p]) > 0) {
+                    abb_insert_string(value, 2 * p + 2);
+                }
+            }
+        } else {
+            System.out.println("Árvore cheia");
+        }
     }
+
+    // @Override
+    // public boolean remove(String value) {
+
+
+    // }
 }

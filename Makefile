@@ -2,10 +2,10 @@ JCC = javac
 JVM = java
 MAIN = Main
 
-# Definir arquivos fonte
+# definir arquivos fonte
 SOURCES = ArvAVL.java ArvBal.java ArvBin.java Main.java
 
-# Definir arquivos .class correspondentes
+# definir arquivos .class correspondentes
 CLASSES = $(SOURCES:.java=.class)
 
 all: $(CLASSES)
