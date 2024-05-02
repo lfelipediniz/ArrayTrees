@@ -6,7 +6,7 @@ public class ArvAVL extends ArvBin {
     @Override
     public void insert(String value) {
         super.insert(value);
-        // Implementar rotinas de balanceamento AVL aqui
+        
     }
 
     @Override

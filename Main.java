@@ -3,10 +3,9 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ArvBin arvore = new ArvBin(1000); // Supõe que a árvore pode ter até 1000 elementos
-        // ArvBal arvoreBalanceada = new ArvBal(1000);
-
+        ArvBin arvore = new ArvBin(1000); // supondo que a árvore pode ter até 1000 elementos
         ArvBal arvoreBalanceada = new ArvBal(1000);
+        ArvAVL arvoreAVL = new ArvAVL(1000);
 
         while (scanner.hasNextLine()) {
             String input = scanner.nextLine();
@@ -26,15 +25,13 @@ public class Main {
                 case "i":
                     arvore.insert(value);
                     arvoreBalanceada.insert(value);
+                    arvoreAVL.insert(value);
                     break;
                 case "d":
-                    if (arvore.remove(value) == false) {
-                        System.out.println("Não encontrado para remover: " + value);
-                    }
+                    arvore.remove(value);
+                    arvoreBalanceada.remove(value);
+                    arvoreAVL.remove(value);
 
-                    if (arvoreBalanceada.remove(value) == false) {
-                        System.out.println("Não encontrado para remover: " + value);
-                    }
                     break;
                 default:
                     System.out.println("Comando não reconhecido.");
