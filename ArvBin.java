@@ -5,6 +5,7 @@ public class ArvBin {
     protected String[] heap;
     protected int size;
     protected int capacity;
+    protected int lastNode = -1;
 
     public ArvBin(int len) {
         heap = new String[len];
@@ -14,17 +15,17 @@ public class ArvBin {
 
     public void insert(String value) {
         int i = 0;
-        while(i < size && heap[i] != null) {
-            if(value.compareTo(heap[i]) < 0) {
+        while (i < size && heap[i] != null) {
+            if (value.compareTo(heap[i]) < 0) {
                 i = 2 * i + 1;
-            } else if(value.compareTo(heap[i]) > 0){
+            } else if (value.compareTo(heap[i]) > 0) {
                 i = 2 * i + 2;
             } else {
                 return; // elemento já existe
             }
         }
 
-        if(i < capacity) {
+        if (i < capacity) {
             heap[i] = value;
             size = Math.max(size, i + 1);
         } else {
@@ -39,7 +40,8 @@ public class ArvBin {
 
     public boolean remove(String v) {
         int index = findIndex(v);
-        if (index == -1) return false; // elemento não encontrado
+        if (index == -1)
+            return false; // elemento não encontrado
 
         List<String> elements = new ArrayList<>();
         collectSubtreeElements(index, elements); // coleta elementos da subárvore
@@ -53,12 +55,12 @@ public class ArvBin {
         return true;
     }
 
-    private int findIndex(String v) {
+    protected int findIndex(String v) {
         int i = 0;
-        while(i < size && heap[i] != null) {
-            if(v.compareTo(heap[i]) < 0) {
+        while (i < size && heap[i] != null) {
+            if (v.compareTo(heap[i]) < 0) {
                 i = 2 * i + 1;
-            } else if(v.compareTo(heap[i]) > 0){
+            } else if (v.compareTo(heap[i]) > 0) {
                 i = 2 * i + 2;
             } else {
                 return i;
@@ -68,14 +70,16 @@ public class ArvBin {
     }
 
     private void collectSubtreeElements(int index, List<String> elements) {
-        if (index >= size || heap[index] == null) return;
+        if (index >= size || heap[index] == null)
+            return;
         elements.add(heap[index]);
         collectSubtreeElements(2 * index + 1, elements); // esquerda
         collectSubtreeElements(2 * index + 2, elements); // direita
     }
 
     private void clearSubtree(int index) {
-        if (index >= size || heap[index] == null) return;
+        if (index >= size || heap[index] == null)
+            return;
         heap[index] = null;
         clearSubtree(2 * index + 1); // esquerda
         clearSubtree(2 * index + 2); // direita
@@ -101,4 +105,38 @@ public class ArvBin {
         sb.append("}");
         return sb.toString();
     }
+
+    // métodos auxiliares
+
+    protected int nodeLeft(int i) {
+        return 2 * i + 1;
+    }
+
+    protected int nodeRight(int i) {
+        return 2 * i + 2;
+    }
+
+    protected String getNode(int i) {
+        if (i >= heap.length || i < 0)
+            return null;
+        return heap[i];
+    }
+
+    protected void setNode(int i, String value) {
+        if (i < heap.length && i >= 0) {
+            heap[i] = value;
+        }
+    }
+
+    protected void indexlastNode() {
+        // Atualiza o índice do último nó baseado na ocupação atual do array
+        for (int i = heap.length - 1; i >= 0; i--) {
+            if (heap[i] != null) {
+                lastNode = i;
+                return;
+            }
+        }
+        lastNode = -1;
+    }
+
 }

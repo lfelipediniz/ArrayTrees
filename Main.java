@@ -40,6 +40,7 @@ public class Main {
         }
         System.out.println(arvore.toString());
         System.out.println(arvoreBalanceada.toString());
+        System.out.println(arvoreAVL.toString());
         scanner.close();
     }
 }
