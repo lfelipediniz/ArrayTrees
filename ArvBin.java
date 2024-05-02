@@ -28,6 +28,10 @@ public class ArvBin {
         if (i < capacity) {
             heap[i] = value;
             size = Math.max(size, i + 1);
+            // Atualiza o lastNode se o novo índice for maior
+            if (i > lastNode) {
+                lastNode = i;
+            }
         } else {
             System.out.println("Árvore cheia");
         }
@@ -52,6 +56,8 @@ public class ArvBin {
                 insert(element);
             }
         }
+
+        indexlastNode(); // Atualiza o índice do último nó após a remoção
         return true;
     }
 
@@ -91,8 +97,16 @@ public class ArvBin {
 
     // retorna uma string que representa a árvore em formato de grafo
     public String toString() {
+        if (size == 1 && heap[0] != null) {
+            // Caso especial: a árvore possui apenas o nó raiz e ele não é nulo
+            return String.format("digraph {\n\"0 %s\" }\n", heap[0]);
+        }
+
         StringBuilder sb = new StringBuilder("digraph {\n");
         for (int i = 0; i < size; i++) {
+            if (heap[i] == null)
+                continue; // Se o valor do nó atual é nulo, pula para o próximo iteração
+
             int left = 2 * i + 1;
             int right = 2 * i + 2;
             if (left < size && heap[left] != null) {
