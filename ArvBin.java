@@ -15,31 +15,27 @@ public class ArvBin {
 
     public void insert(String value) {
         int i = 0;
-        while (i < size && heap[i] != null) {
-            if (value.compareTo(heap[i]) < 0) {
-                i = 2 * i + 1;
-            } else if (value.compareTo(heap[i]) > 0) {
-                i = 2 * i + 2;
+        while (i < size && getNode(i) != null) {
+            if (value.compareTo(getNode(i)) < 0) {
+                i = nodeLeft(i);
+            } else if (value.compareTo(getNode(i)) > 0) {
+                i = nodeRight(i);
             } else {
                 return; // elemento já existe
             }
         }
 
         if (i < capacity) {
-            heap[i] = value;
+            setNode(i, value);
             size = Math.max(size, i + 1);
-            // Atualiza o lastNode se o novo índice for maior
-            if (i > lastNode) {
-                lastNode = i;
-            }
+            indexlastNode(); // Atualiza o lastNode se necessário
         } else {
             System.out.println("Árvore cheia");
         }
     }
 
     public boolean find(String v) {
-        int i = findIndex(v);
-        return i != -1;
+        return findIndex(v) != -1;
     }
 
     public boolean remove(String v) {
@@ -63,11 +59,11 @@ public class ArvBin {
 
     protected int findIndex(String v) {
         int i = 0;
-        while (i < size && heap[i] != null) {
-            if (v.compareTo(heap[i]) < 0) {
-                i = 2 * i + 1;
-            } else if (v.compareTo(heap[i]) > 0) {
-                i = 2 * i + 2;
+        while (i < size && getNode(i) != null) {
+            if (v.compareTo(getNode(i)) < 0) {
+                i = nodeLeft(i);
+            } else if (v.compareTo(getNode(i)) > 0) {
+                i = nodeRight(i);
             } else {
                 return i;
             }
@@ -76,19 +72,19 @@ public class ArvBin {
     }
 
     private void collectSubtreeElements(int index, List<String> elements) {
-        if (index >= size || heap[index] == null)
+        if (index >= size || getNode(index) == null)
             return;
-        elements.add(heap[index]);
-        collectSubtreeElements(2 * index + 1, elements); // esquerda
-        collectSubtreeElements(2 * index + 2, elements); // direita
+        elements.add(getNode(index));
+        collectSubtreeElements(nodeLeft(index), elements); // esquerda
+        collectSubtreeElements(nodeRight(index), elements); // direita
     }
 
     private void clearSubtree(int index) {
-        if (index >= size || heap[index] == null)
+        if (index >= size || getNode(index) == null)
             return;
-        heap[index] = null;
-        clearSubtree(2 * index + 1); // esquerda
-        clearSubtree(2 * index + 2); // direita
+        setNode(index, null);
+        clearSubtree(nodeLeft(index)); // esquerda
+        clearSubtree(nodeRight(index)); // direita
     }
 
     public int len() {
@@ -101,25 +97,22 @@ public class ArvBin {
             // Caso especial: a árvore possui apenas o nó raiz e ele não é nulo
             return String.format("digraph {\n\"0 %s\" }\n", heap[0]);
         }
-
         StringBuilder sb = new StringBuilder("digraph {\n");
         for (int i = 0; i < size; i++) {
-            if (heap[i] == null)
-                continue; // Se o valor do nó atual é nulo, pula para o próximo iteração
+            if (getNode(i) == null) continue;
 
-            int left = 2 * i + 1;
-            int right = 2 * i + 2;
-            if (left < size && heap[left] != null) {
-                sb.append(String.format("\"%d %s\" -> \"%d %s\"\n", i, heap[i], left, heap[left]));
+            int left = nodeLeft(i);
+            int right = nodeRight(i);
+            if (left < size && getNode(left) != null) {
+                sb.append(String.format("\"%d %s\" -> \"%d %s\"\n", i, getNode(i), left, getNode(left)));
             }
-            if (right < size && heap[right] != null) {
-                sb.append(String.format("\"%d %s\" -> \"%d %s\"\n", i, heap[i], right, heap[right]));
+            if (right < size && getNode(right) != null) {
+                sb.append(String.format("\"%d %s\" -> \"%d %s\"\n", i, getNode(i), right, getNode(right)));
             }
         }
         sb.append("}");
         return sb.toString();
     }
-
     // métodos auxiliares
 
     protected int nodeLeft(int i) {
