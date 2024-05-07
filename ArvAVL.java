@@ -7,22 +7,20 @@ public class ArvAVL extends ArvBin {
     }
 
     @Override
-    // insere um valor value na AVL
     public void insert(String value) {
         super.insert(value);
-        // balanceia a árvore
+        // balanceia a árvore com base no critérios de balanceamento da árvore AVL
         this.balance();
-
     }
 
     @Override
     public boolean remove(String v) {
-
         if (!find(v)) {
-            return false; // se o valor não for encontrado, retorna falso
+            return false; 
         }
 
-        int i = findIndex(v); // encontra o índice do valor a ser removido
+        // encontra o index do nó a ser removido
+        int i = findIndex(v); 
 
         // se o nó não tiver filhos, ele é removido
         if (getNode(nodeLeft(i)) == null && getNode(nodeRight(i)) == null) {
@@ -31,12 +29,9 @@ public class ArvAVL extends ArvBin {
         }
 
         // caso o nó tenha apenas um filho, ele é removido e o filho é inserido no lugar
-        if (getNode(nodeLeft(i)) != null) {
-            swapMaxLeft(i);
-        } else {
-            swapMinRight(i);
-        }
-
+        if (getNode(nodeLeft(i)) != null) swapMaxLeft(i); 
+        else swapMinRight(i);
+        
         this.balance();
 
         indexlastNode();
@@ -171,7 +166,6 @@ public class ArvAVL extends ArvBin {
 
         super.remove(maxString);
         setNode(i, maxString);
-
     }
 
     private int max(int i) {
@@ -216,7 +210,6 @@ public class ArvAVL extends ArvBin {
     }
 
     private void searchAux(List<String> strList, int cur) {
-
         if (getNode(cur) == null)
             return;
 

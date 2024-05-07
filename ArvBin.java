@@ -113,7 +113,7 @@ public class ArvBin {
         sb.append("}");
         return sb.toString();
     }
-    // métodos auxiliares
+    // métodos auxiliares para usar nas demais árvores também
 
     protected int nodeLeft(int i) {
         return 2 * i + 1;
