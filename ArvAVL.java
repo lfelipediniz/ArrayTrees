@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class ArvAVL extends ArvBin {
 	ArvAVL(int len) {
@@ -39,7 +40,7 @@ public class ArvAVL extends ArvBin {
 		if (!isBalanced())
 			this.toBalance();
 
-		indexlastNode();
+		updateIndexLastNode();
 
 		return true;
 	}
@@ -48,92 +49,81 @@ public class ArvAVL extends ArvBin {
 	private void rightRotation(int i) {
 		String leftNode = getNode(nodeLeft(i));
 		String parent = getNode(i);
-		List<String> list = new ArrayList<>();
+		
+		List<String> subtreeNodes = new ArrayList<>();
 
-		list = search(i);
+		subtreeNodes = collectAndRemoveSubtree(i);
 
 		super.insert(leftNode);
 		super.insert(parent);
 
-		for (String v : list)
+		for (String v : subtreeNodes)
 			super.insert(v);
 
-		indexlastNode();
+		updateIndexLastNode();
 	}
 
 	private void leftRotation(int i) {
 		String rightNode = getNode(nodeRight(i));
 		String parent = getNode(i);
-		List<String> list = new ArrayList<>();
+		List<String> subtreeNodes = new ArrayList<>();
 
-		list = search(i);
+		subtreeNodes = collectAndRemoveSubtree(i);
 
 		super.insert(rightNode);
 		super.insert(parent);
 
-		for (String v : list)
+		for (String v : subtreeNodes)
 			super.insert(v);
 
-		indexlastNode();
+		updateIndexLastNode();
 	}
 
 	private void toBalance() {
-		for (int i = this.lastNode; i >= 0; i--)
-			if (getNode(i) != null && !this.nodeBalance(i))
-				this.balanceTree(i);
+		for (int i = lastNode; i >= 0; i--)
+			if (getNode(i) != null && !this.nodeBalance(i)) {
+				if (i > lastNode)
+					return;
+
+				int height = height(nodeLeft(i)) - height(nodeRight(i));
+
+				if (height < 0) {
+					int rightHeight = height(nodeLeft(nodeRight(i))) - height(nodeRight(nodeRight(i)));
+
+					if (rightHeight <= 0) {
+						this.leftRotation(i);
+					} else {
+						this.rightRotation(nodeRight(i));
+						updateIndexLastNode();
+						this.leftRotation(i);
+					}
+				} else {
+					int leftHeight = height(nodeLeft(nodeLeft(i))) - height(nodeRight(nodeLeft(i)));
+
+					if (leftHeight >= 0) {
+						this.rightRotation(i);
+
+					} else {
+
+						this.leftRotation(nodeLeft(i));
+						updateIndexLastNode();
+						this.rightRotation(i);
+					}
+				}
+
+				updateIndexLastNode();
+			}
+
 	}
 
 	// checa se o nó está balanceado
 	private boolean nodeBalance(int i) {
-		int height = nodeHeight(nodeLeft(i)) - nodeHeight(nodeRight(i));
+		int height = height(nodeLeft(i)) - height(nodeRight(i));
 
 		if (Math.abs(height) > 1)
 			return false;
 		else
 			return true;
-	}
-
-	private int nodeHeight(int i) {
-		if (i > this.lastNode || getNode(i) == null)
-			return 0;
-
-		int leftHeight = this.nodeHeight(nodeLeft(i));
-		int rightHeight = this.nodeHeight(nodeRight(i));
-
-		return Math.max(leftHeight, rightHeight) + 1;
-	}
-
-	private void balanceTree(int i) {
-		if (i > this.lastNode) 
-			return;
-		
-		int height = nodeHeight(nodeLeft(i)) - nodeHeight(nodeRight(i));
-
-		if (height < 0) {
-			int rightHeight = nodeHeight(nodeLeft(nodeRight(i))) - nodeHeight(nodeRight(nodeRight(i)));
-
-			if (rightHeight <= 0) {
-				this.leftRotation(i);
-			} else {
-				this.rightRotation(nodeRight(i));
-				this.indexlastNode();
-				this.leftRotation(i);
-			}
-		} else {
-			int leftHeight = nodeHeight(nodeLeft(nodeLeft(i))) - nodeHeight(nodeRight(nodeLeft(i)));
-
-			if (leftHeight >= 0) {
-				this.rightRotation(i);
-
-			} else {
-
-				this.leftRotation(nodeLeft(i));
-				this.indexlastNode();
-				this.rightRotation(i);
-			}
-		}
-
-		this.indexlastNode();
 	}
 
 	private void swapMaxLeft(int i) {
@@ -145,9 +135,9 @@ public class ArvAVL extends ArvBin {
 	}
 
 	private int max(int i) {
-		if (getNode((nodeRight(i))) == null) 
+		if (getNode((nodeRight(i))) == null)
 			return i;
-		
+
 		return max(nodeRight(i));
 	}
 
@@ -156,37 +146,44 @@ public class ArvAVL extends ArvBin {
 		String minString = getNode(minIndex);
 
 		super.remove(minString);
-
 		setNode(i, minString);
 	}
 
 	private int min(int i) {
-		if (getNode((nodeLeft(i))) == null) 
+		if (getNode((nodeLeft(i))) == null)
 			return i;
-		
+
 		return min(nodeLeft(i));
 	}
 
-	private List<String> search(int i) {
-		List<String> strList = new ArrayList<>();
+	// coleta os valores dos nós da subárvore e remove os nós
+	private List<String> collectAndRemoveSubtree(int i) {
+		List<String> nodeValues = new ArrayList<>();
+		Stack<Integer> stack = new Stack<>();
+		stack.push(i);
 
-		strList.add(getNode(i));
-		setNode(i, null);
+		while (!stack.isEmpty()) {
+			int currentNodeIndex = stack.pop();
+			String nodeValue = getNode(currentNodeIndex);
 
-		searchAux(strList, nodeLeft(i));
-		searchAux(strList, nodeRight(i));
+			if (nodeValue != null) {
+				nodeValues.add(nodeValue);
+				setNode(currentNodeIndex, null);
 
-		return strList;
-	}
+				// primeiro adiciona os nós da direita, para que o nó esquerdo seja processado
+				// antes (em ordem)
+				int right = nodeRight(currentNodeIndex);
+				int left = nodeLeft(currentNodeIndex);
 
-	private void searchAux(List<String> strList, int cur) {
-		if (getNode(cur) == null)
-			return;
+				if (right != -1)
+					stack.push(right);
 
-		strList.add(getNode(cur));
-		setNode(cur, null);
+				if (left != -1)
+					stack.push(left);
 
-		searchAux(strList, nodeLeft(cur));
-		searchAux(strList, nodeRight(cur));
+			}
+		}
+
+		return nodeValues;
 	}
 }

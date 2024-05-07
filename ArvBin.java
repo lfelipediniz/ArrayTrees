@@ -28,7 +28,7 @@ public class ArvBin {
         if (i < capacity) {
             setNode(i, value);
             size = Math.max(size, i + 1);
-            indexlastNode(); // Atualiza o lastNode se necessário
+            updateIndexLastNode(); // Atualiza o lastNode se necessário
         } else {
             System.out.println("Árvore cheia");
         }
@@ -53,7 +53,7 @@ public class ArvBin {
             }
         }
 
-        indexlastNode(); // Atualiza o índice do último nó após a remoção
+        updateIndexLastNode(); // atualiza o índice do último nó após a remoção
         return true;
     }
 
@@ -127,19 +127,19 @@ public class ArvBin {
             return false; // Diferença de altura maior que 1
         }
 
-        // Verifica recursivamente para subárvores esquerda e direita
+        // verifica recursivamente para subárvores esquerda e direita
         return isBalanced(nodeLeft(i)) && isBalanced(nodeRight(i));
     }
 
-    private int height(int i) {
+    // métodos auxiliares para usar nas demais árvores também
+
+    protected int height(int i) {
         if (i >= size || getNode(i) == null) {
             return 0; // A altura de um nó nulo é 0
         }
-        // Calcula a altura de forma recursiva
+        // calcula a altura de forma recursiva
         return 1 + Math.max(height(nodeLeft(i)), height(nodeRight(i)));
     }
-
-    // métodos auxiliares para usar nas demais árvores também
 
     protected int nodeLeft(int i) {
         return 2 * i + 1;
@@ -161,8 +161,8 @@ public class ArvBin {
         }
     }
 
-    protected void indexlastNode() {
-        // Atualiza o índice do último nó baseado na ocupação atual do array
+    protected void updateIndexLastNode() {
+        // atualiza o índice do último nó baseado na ocupação atual do array
         for (int i = heap.length - 1; i >= 0; i--) {
             if (heap[i] != null) {
                 lastNode = i;
