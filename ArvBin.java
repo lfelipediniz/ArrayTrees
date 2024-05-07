@@ -1,5 +1,5 @@
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 
 public class ArvBin {
     protected String[] heap;
@@ -113,6 +113,7 @@ public class ArvBin {
         sb.append("}");
         return sb.toString();
     }
+
     // métodos auxiliares para usar nas demais árvores também
 
     protected int nodeLeft(int i) {
@@ -146,4 +147,15 @@ public class ArvBin {
         lastNode = -1;
     }
 
+    // conta os subnós
+    protected int countNodes(int i) {
+        if (i >= size || getNode(i) == null) {
+            return 0; // se o nó não existe, retorna 0
+        }
+
+        // conta recursivamente os nós à esquerda e à direita, mais o próprio nó
+        int leftCount = countNodes(nodeLeft(i));
+        int rightCount = countNodes(nodeRight(i));
+        return 1 + leftCount + rightCount;
+    }
 }
