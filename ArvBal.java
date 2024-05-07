@@ -9,12 +9,40 @@ public class ArvBal extends ArvBin {
     @Override
     public void insert(String value) {
         super.insert(value);
-        toBalance();
+        if (!isBalanced()) {
+            toBalance();
+        }
+    }
 
+    protected boolean isBalanced() {
+        return isBalanced(0); // inicia a verificação a partir da raiz
+    }
+
+    private boolean isBalanced(int i) {
+        if (i >= size || getNode(i) == null) {
+            return true; // Um nó nulo é considerado balanceado
+        }
+
+        int leftHeight = height(nodeLeft(i));
+        int rightHeight = height(nodeRight(i));
+
+        if (Math.abs(leftHeight - rightHeight) > 1) {
+            return false; // Diferença de altura maior que 1
+        }
+
+        // Verifica recursivamente para subárvores esquerda e direita
+        return isBalanced(nodeLeft(i)) && isBalanced(nodeRight(i));
+    }
+
+    private int height(int i) {
+        if (i >= size || getNode(i) == null) {
+            return 0; // A altura de um nó nulo é 0
+        }
+        // Calcula a altura de forma recursiva
+        return 1 + Math.max(height(nodeLeft(i)), height(nodeRight(i)));
     }
 
     protected void toBalance() {
-        // salvar todos os elementos da árvore em uma lista auxiliar
         List<String> elements = new ArrayList<>();
         for (String element : heap) {
             if (element != null) {
@@ -22,10 +50,8 @@ public class ArvBal extends ArvBin {
             }
         }
 
-        // ordenar elementos da lista de forma crescente
         elements.sort(String::compareTo);
 
-        // percorre o heap e atribui null
         for (int i = 0; i < capacity; i++) {
             heap[i] = null;
         }
@@ -36,19 +62,21 @@ public class ArvBal extends ArvBin {
     }
 
     protected void insertBalanced(int a, int b, List<String> elements) {
-        if (a > b)
+        if (a > b) {
             return;
-        int meio = (a + b) / 2;
-        super.insert(elements.get(meio));
-        insertBalanced(a, meio - 1, elements);
-        insertBalanced(meio + 1, b, elements);
+        }
+        int mid = (a + b) / 2;
+        super.insert(elements.get(mid));
+        insertBalanced(a, mid - 1, elements);
+        insertBalanced(mid + 1, b, elements);
     }
 
     @Override
     public boolean remove(String value) {
         boolean result = super.remove(value);
-        toBalance();
-
+        if (!isBalanced()) {
+            toBalance();
+        }
         return result;
     }
 }
