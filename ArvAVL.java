@@ -18,24 +18,7 @@ public class ArvAVL extends ArvBin {
 
 	@Override
 	public boolean remove(String v) {
-		if (!find(v)) {
-			return false;
-		}
-
-		// encontra o index do nó a ser removido
-		int i = findIndex(v);
-
-		// se o nó não tiver filhos, ele é removido
-		if (getNode(nodeLeft(i)) == null && getNode(nodeRight(i)) == null) {
-			super.remove(v);
-			return true;
-		}
-
-		// caso o nó tenha apenas um filho, ele é removido e o filho é inserido no lugar
-		if (getNode(nodeLeft(i)) != null)
-			swapMaxLeft(i);
-		else
-			swapMinRight(i);
+		super.remove(v);
 
 		if (!isBalanced())
 			this.toBalance();
@@ -49,7 +32,7 @@ public class ArvAVL extends ArvBin {
 	private void rightRotation(int i) {
 		String leftNode = getNode(nodeLeft(i));
 		String parent = getNode(i);
-		
+
 		List<String> subtreeNodes = new ArrayList<>();
 
 		subtreeNodes = collectAndRemoveSubtree(i);

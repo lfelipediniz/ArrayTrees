@@ -39,6 +39,29 @@ public class ArvBin {
     }
 
     public boolean remove(String v) {
+        if (!find(v)) {
+            return false;
+        }
+
+        // encontra o index do nó a ser removido
+        int i = findIndex(v);
+
+        // se o nó não tiver filhos, ele é removido
+        if (getNode(nodeLeft(i)) == null && getNode(nodeRight(i)) == null) {
+            isRemoveNode(v);
+            return true;
+        }
+
+        // caso o nó tenha apenas um filho, ele é removido e o filho é inserido no lugar
+        if (getNode(nodeLeft(i)) != null)
+            swapMaxLeft(i);
+        else
+            swapMinRight(i);
+
+        return true;
+    }
+
+    private boolean isRemoveNode(String v) {
         int index = findIndex(v);
         if (index == -1)
             return false; // elemento não encontrado
@@ -101,20 +124,53 @@ public class ArvBin {
         for (int i = 0; i < size; i++) {
             if (getNode(i) == null)
                 continue;
-    
+
             int left = nodeLeft(i);
             int right = nodeRight(i);
             if (left < size && getNode(left) != null) {
-                sb.append(String.format("\"%d %s\" ->\"%d %s\"\n", i, getNode(i), left, getNode(left))); // Espaço removido aqui
+                sb.append(String.format("\"%d %s\" ->\"%d %s\"\n", i, getNode(i), left, getNode(left))); // Espaço
+                                                                                                         // removido
+                                                                                                         // aqui
             }
             if (right < size && getNode(right) != null) {
-                sb.append(String.format("\"%d %s\" ->\"%d %s\"\n", i, getNode(i), right, getNode(right))); // Espaço removido aqui
+                sb.append(String.format("\"%d %s\" ->\"%d %s\"\n", i, getNode(i), right, getNode(right))); // Espaço
+                                                                                                           // removido
+                                                                                                           // aqui
             }
         }
         sb.append("}\n"); // Adiciona uma quebra de linha extra aqui
         return sb.toString();
     }
-    
+
+    private void swapMaxLeft(int i) {
+        int maxIndex = max(nodeLeft(i));
+        String maxString = getNode(maxIndex);
+
+        isRemoveNode(maxString);
+        setNode(i, maxString);
+    }
+
+    private int max(int i) {
+        if (getNode((nodeRight(i))) == null)
+            return i;
+
+        return max(nodeRight(i));
+    }
+
+    private void swapMinRight(int i) {
+        int minIndex = min(nodeRight(i));
+        String minString = getNode(minIndex);
+
+        isRemoveNode(minString);
+        setNode(i, minString);
+    }
+
+    private int min(int i) {
+        if (getNode((nodeLeft(i))) == null)
+            return i;
+
+        return min(nodeLeft(i));
+    }
 
     private boolean isBalanced(int i) {
         if (i >= size || getNode(i) == null) {
