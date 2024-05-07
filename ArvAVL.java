@@ -109,36 +109,6 @@ public class ArvAVL extends ArvBin {
 			return true;
 	}
 
-	private void swapMaxLeft(int i) {
-		int maxIndex = max(nodeLeft(i));
-		String maxString = getNode(maxIndex);
-
-		super.remove(maxString);
-		setNode(i, maxString);
-	}
-
-	private int max(int i) {
-		if (getNode((nodeRight(i))) == null)
-			return i;
-
-		return max(nodeRight(i));
-	}
-
-	private void swapMinRight(int i) {
-		int minIndex = min(nodeRight(i));
-		String minString = getNode(minIndex);
-
-		super.remove(minString);
-		setNode(i, minString);
-	}
-
-	private int min(int i) {
-		if (getNode((nodeLeft(i))) == null)
-			return i;
-
-		return min(nodeLeft(i));
-	}
-
 	// coleta os valores dos nós da subárvore e remove os nós
 	private List<String> collectAndRemoveSubtree(int i) {
 		List<String> nodeValues = new ArrayList<>();

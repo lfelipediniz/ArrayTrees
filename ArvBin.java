@@ -94,22 +94,6 @@ public class ArvBin {
         return -1; // não encontrado
     }
 
-    private void collectSubtreeElements(int index, List<String> elements) {
-        if (index >= size || getNode(index) == null)
-            return;
-        elements.add(getNode(index));
-        collectSubtreeElements(nodeLeft(index), elements); // esquerda
-        collectSubtreeElements(nodeRight(index), elements); // direita
-    }
-
-    private void clearSubtree(int index) {
-        if (index >= size || getNode(index) == null)
-            return;
-        setNode(index, null);
-        clearSubtree(nodeLeft(index)); // esquerda
-        clearSubtree(nodeRight(index)); // direita
-    }
-
     public int len() {
         return size;
     }
@@ -140,6 +124,22 @@ public class ArvBin {
         }
         sb.append("}\n"); // Adiciona uma quebra de linha extra aqui
         return sb.toString();
+    }
+
+    private void collectSubtreeElements(int index, List<String> elements) {
+        if (index >= size || getNode(index) == null)
+            return;
+        elements.add(getNode(index));
+        collectSubtreeElements(nodeLeft(index), elements); // esquerda
+        collectSubtreeElements(nodeRight(index), elements); // direita
+    }
+
+    private void clearSubtree(int index) {
+        if (index >= size || getNode(index) == null)
+            return;
+        setNode(index, null);
+        clearSubtree(nodeLeft(index)); // esquerda
+        clearSubtree(nodeRight(index)); // direita
     }
 
     private void swapMaxLeft(int i) {
@@ -188,8 +188,8 @@ public class ArvBin {
         return isBalanced(nodeLeft(i)) && isBalanced(nodeRight(i));
     }
 
-    // métodos auxiliares para usar nas demais árvores também
 
+    // métodos auxiliares para usar nas demais árvores também
     protected int height(int i) {
         if (i >= size || getNode(i) == null) {
             return 0; // A altura de um nó nulo é 0
@@ -245,5 +245,4 @@ public class ArvBin {
     protected boolean isBalanced() {
         return isBalanced(0); // inicia a verificação a partir da raiz
     }
-
 }
