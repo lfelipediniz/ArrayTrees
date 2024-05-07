@@ -81,7 +81,7 @@ public class ArvAVL extends ArvBin {
 
 	private void toBalance() {
 		for (int i = lastNode; i >= 0; i--)
-			if (getNode(i) != null && !this.nodeBalance(i)) {
+			if (getNode(i) != null && !this.isNodeBalance(i)) {
 				if (i > lastNode)
 					return;
 
@@ -117,7 +117,7 @@ public class ArvAVL extends ArvBin {
 	}
 
 	// checa se o nó está balanceado
-	private boolean nodeBalance(int i) {
+	private boolean isNodeBalance(int i) {
 		int height = height(nodeLeft(i)) - height(nodeRight(i));
 
 		if (Math.abs(height) > 1)

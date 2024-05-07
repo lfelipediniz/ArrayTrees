@@ -94,26 +94,27 @@ public class ArvBin {
     // retorna uma string que representa a árvore em formato de grafo
     public String toString() {
         if (size == 1 && heap[0] != null) {
-            // Caso especial: a árvore possui apenas o nó raiz e ele não é nulo
+            // caso especial: a árvore possui apenas o nó raiz e ele não é nulo
             return String.format("digraph {\n\"0 %s\" }\n", heap[0]);
         }
         StringBuilder sb = new StringBuilder("digraph {\n");
         for (int i = 0; i < size; i++) {
             if (getNode(i) == null)
                 continue;
-
+    
             int left = nodeLeft(i);
             int right = nodeRight(i);
             if (left < size && getNode(left) != null) {
-                sb.append(String.format("\"%d %s\" -> \"%d %s\"\n", i, getNode(i), left, getNode(left)));
+                sb.append(String.format("\"%d %s\" ->\"%d %s\"\n", i, getNode(i), left, getNode(left))); // Espaço removido aqui
             }
             if (right < size && getNode(right) != null) {
-                sb.append(String.format("\"%d %s\" -> \"%d %s\"\n", i, getNode(i), right, getNode(right)));
+                sb.append(String.format("\"%d %s\" ->\"%d %s\"\n", i, getNode(i), right, getNode(right))); // Espaço removido aqui
             }
         }
-        sb.append("}");
+        sb.append("}\n"); // Adiciona uma quebra de linha extra aqui
         return sb.toString();
     }
+    
 
     private boolean isBalanced(int i) {
         if (i >= size || getNode(i) == null) {
