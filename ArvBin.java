@@ -99,7 +99,8 @@ public class ArvBin {
         }
         StringBuilder sb = new StringBuilder("digraph {\n");
         for (int i = 0; i < size; i++) {
-            if (getNode(i) == null) continue;
+            if (getNode(i) == null)
+                continue;
 
             int left = nodeLeft(i);
             int right = nodeRight(i);
@@ -112,6 +113,30 @@ public class ArvBin {
         }
         sb.append("}");
         return sb.toString();
+    }
+
+    private boolean isBalanced(int i) {
+        if (i >= size || getNode(i) == null) {
+            return true; // Um nó nulo é considerado balanceado
+        }
+
+        int leftHeight = height(nodeLeft(i));
+        int rightHeight = height(nodeRight(i));
+
+        if (Math.abs(leftHeight - rightHeight) > 1) {
+            return false; // Diferença de altura maior que 1
+        }
+
+        // Verifica recursivamente para subárvores esquerda e direita
+        return isBalanced(nodeLeft(i)) && isBalanced(nodeRight(i));
+    }
+
+    private int height(int i) {
+        if (i >= size || getNode(i) == null) {
+            return 0; // A altura de um nó nulo é 0
+        }
+        // Calcula a altura de forma recursiva
+        return 1 + Math.max(height(nodeLeft(i)), height(nodeRight(i)));
     }
 
     // métodos auxiliares para usar nas demais árvores também
@@ -158,4 +183,10 @@ public class ArvBin {
         int rightCount = countNodes(nodeRight(i));
         return 1 + leftCount + rightCount;
     }
+
+    // verifica se a árvore está balanceada
+    protected boolean isBalanced() {
+        return isBalanced(0); // inicia a verificação a partir da raiz
+    }
+
 }
