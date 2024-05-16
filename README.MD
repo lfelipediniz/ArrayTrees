@@ -2,7 +2,7 @@
 
 ## Project description
 
-This project implements binary trees and balanced binary trees (AVL) in Java, using only arrays (vectors). The goal is to provide an in-depth understanding of how these data structures work and are manipulated in practice.
+This project implements binary trees and balanced binary trees (include AVL) in Java, using only arrays (vectors). The goal is to provide an in-depth understanding of how these data structures work and are manipulated in practice.
 
 ## Classes and Subclasses
 
