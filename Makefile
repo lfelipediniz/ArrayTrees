@@ -10,8 +10,7 @@ CLASSES = $(SOURCES:.java=.class)
 
 all: $(CLASSES)
 
-%.class: %.java
-	$(JCC) $<
+%.class: %.java 
 
 run: $(MAIN).class
 	$(JVM) $(MAIN)
